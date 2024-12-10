@@ -52,7 +52,7 @@ function checkUsernameExists(req, res, next) {
 
   Users.findBy({ username })
     .then(users => {
-      if (users && users.length < 0) {
+      if (users && users.length === 0) {
         res.status(422).json({ message: "Invalid credentials" });
       } else {
         req.user = users[0];
@@ -75,7 +75,7 @@ function checkUsernameExists(req, res, next) {
 function checkPasswordLength(req, res, next) {
   const { password } = req.body;
   
-  if (!password.trim() || password.length <= 3) {
+  if (!password || password.length <= 3) {
     res.status(422).json({ message: "Password must be longer than 3 chars" });
   } else {
     next()

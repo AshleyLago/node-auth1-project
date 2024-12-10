@@ -3,7 +3,7 @@ const express = require('express');
 const Users = require('../users/users-model')
 // Require `checkUsernameFree`, `checkUsernameExists` and `checkPasswordLength`
 // middleware functions from `auth-middleware.js`. You will need them here!
-const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require('./auth-middleware')
+const { checkUsernameFree, checkUsernameExists, checkPasswordLength } = require('./auth-middleware');
 const bcrypt = require('bcryptjs');
 
 const router = express.Router();
@@ -31,7 +31,7 @@ const router = express.Router();
   }
 */
 router.post('/register', checkUsernameFree, checkPasswordLength, (req, res, next) => {
-  const { username, password } = req.body
+  const { username, password } = req.body;
 
   const hash = bcrypt.hashSync(password, 8)
 
@@ -60,7 +60,7 @@ router.post('/register', checkUsernameFree, checkPasswordLength, (req, res, next
     "message": "Invalid credentials"
   }
 */
-router.post('/login', checkUsernameExists, (req, res, next) => {
+router.post('/login', checkUsernameExists, (req, res) => {
   const { password } = req.body
   const user = req.user
 
@@ -68,7 +68,7 @@ router.post('/login', checkUsernameExists, (req, res, next) => {
     req.session.user = user
     res.status(200).json({ message: `Welcome ${user.username}!` })
   } else {
-    next()
+    res.status(401).json({ message: "Invalid credentials" });
   }
 })
 
@@ -99,10 +99,6 @@ router.get('/logout', (req, res, next) => {
   } else {
     res.status(200).json({ message: "no session" });
   }
-})
-
-router.use((error, req, res, next) => { // eslint-disable-line
-  res.status(error.status || 500).json({ message: error.message })
 })
 
 // Don't forget to add the router to the `exports` object so it can be required in other modules

@@ -37,10 +37,5 @@ router.get('/', restricted, (req, res, next) => {
     .catch(next)
 });
 
-
-router.use((error, req, res, next) => { // eslint-disable-line
-  res.status(error.status || 500).json({ message: error.message })
-})
-
 // Don't forget to add the router to the `exports` object so it can be required in other modules
 module.exports = router
